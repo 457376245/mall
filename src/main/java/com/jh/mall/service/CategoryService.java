@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface CategoryService {
     ResponseVo<List<CategoryVo>> getCategorys();
+    ResponseVo<List<CategoryVo>> getCategorysById(Integer Id);
 }

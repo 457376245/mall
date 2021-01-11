@@ -45,6 +45,34 @@ public class CategoryServiceImpl implements CategoryService {
 
         return ResponseVo.success(categoryList);
     }
+
+    @Override
+    public ResponseVo<List<CategoryVo>> getCategorysById(Integer Id) {
+        List<CategoryVo> categoryVoList = getCategoryVos();
+        List<CategoryVo> collect = categoryVoList.stream().filter(categoryVo -> categoryVo.getId().equals(Id) ).map(categoryVo -> {
+            categoryVo.setChildCategory(getChildCategory(Id, categoryVoList));
+            return categoryVo;
+        }).collect(Collectors.toList());
+        return ResponseVo.success(collect);
+    }
+    private List<CategoryVo> getChildCategory(Integer Id,List <CategoryVo> all) {
+        List<CategoryVo> collect = all.stream().filter(categoryVo -> categoryVo.getParentId() .equals(Id)).map(categoryVo -> {
+            categoryVo.setChildCategory(getChildCategory(categoryVo.getId(), all));
+            return categoryVo;
+        }).collect(Collectors.toList());
+        return collect;
+    }
+    private List<CategoryVo> getCategoryVos(){
+        List<Category> allCategorys = categoryMapper.getCategorys();
+        //将categoryList转为categoryVoList
+        List<CategoryVo> categoryVos = allCategorys.stream().map(category -> {
+            CategoryVo categoryVo = new CategoryVo();
+            BeanUtils.copyProperties(category, categoryVo);
+            return categoryVo;
+        }).collect(Collectors.toList());
+        return categoryVos;
+    }
+
     List<CategoryVo> getChildCategory(List<CategoryVo> allCategorys,CategoryVo category){
         //获得二级菜单
         List<CategoryVo> secondList = allCategorys.stream().filter(childCategory -> childCategory.getParentId().equals(category.getId())

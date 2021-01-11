@@ -4,6 +4,7 @@ import com.jh.mall.MallApplicationTests;
 import com.jh.mall.dao.CategoryMapper;
 import com.jh.mall.pojo.Category;
 import com.jh.mall.service.CategoryService;
+import com.jh.mall.vo.CategoryVo;
 import com.jh.mall.vo.ResponseVo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -24,5 +25,10 @@ public class CategoryServiceImplTest extends MallApplicationTests {
 
     @Test
     public void getChildCategory() {
+    }
+    @Test
+    public void getCategorysById(){
+        ResponseVo<List<CategoryVo>> categorysById = categoryService.getCategorysById(100001);
+        log.info(categorysById.toString());
     }
 }
