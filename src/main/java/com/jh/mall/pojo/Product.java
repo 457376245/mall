@@ -1,11 +1,12 @@
 package com.jh.mall.pojo;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.util.Date;
-
+import java.time.LocalDateTime;
 @Data
+@ToString
 public class Product {
     private Integer id;
 
@@ -27,7 +28,9 @@ public class Product {
 
     private Integer status;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
-    private Date updateTime;
+    private LocalDateTime updateTime;
+
+
 }

@@ -9,7 +9,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,20 +24,13 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
     @Override
     public ResponseVo<List<CategoryVo>> getCategorys() {
-        //获得所有category数据
-        List<Category> allCategorys = categoryMapper.getCategorys();
-        //将categoryList转为categoryVoList
-        List<CategoryVo> categoryVos = allCategorys.stream().map(category -> {
-            CategoryVo categoryVo = new CategoryVo();
-            BeanUtils.copyProperties(category, categoryVo);
-            return categoryVo;
-        }).collect(Collectors.toList());
-        //通过stream获得树形categoryList
+        //将所有category转为categoryVo
+        List<CategoryVo> categoryVos = getCategoryVos();
         //得到1级菜单
         List<CategoryVo> categoryList = categoryVos.stream().filter(category -> category.getParentId() == 0).
                 map(category -> {
                     //遍历装填子菜单
-                    category.setChildCategory(getChildCategory(categoryVos, category));
+                    category.setChildCategory(getChildCategory(category.getId(),categoryVos));
                     return category;
         }).sorted(Comparator.comparing(categoryVo -> categoryVo.getSortOrder())
         ).collect(Collectors.toList());
@@ -46,41 +38,14 @@ public class CategoryServiceImpl implements CategoryService {
         return ResponseVo.success(categoryList);
     }
 
-    @Override
-    public ResponseVo<List<CategoryVo>> getCategorysById(Integer Id) {
-        List<CategoryVo> categoryVoList = getCategoryVos();
-        List<CategoryVo> collect = categoryVoList.stream().filter(categoryVo -> categoryVo.getId().equals(Id) ).map(categoryVo -> {
-            categoryVo.setChildCategory(getChildCategory(Id, categoryVoList));
-            return categoryVo;
-        }).collect(Collectors.toList());
-        return ResponseVo.success(collect);
-    }
-    private List<CategoryVo> getChildCategory(Integer Id,List <CategoryVo> all) {
-        List<CategoryVo> collect = all.stream().filter(categoryVo -> categoryVo.getParentId() .equals(Id)).map(categoryVo -> {
-            categoryVo.setChildCategory(getChildCategory(categoryVo.getId(), all));
-            return categoryVo;
-        }).collect(Collectors.toList());
-        return collect;
-    }
-    private List<CategoryVo> getCategoryVos(){
-        List<Category> allCategorys = categoryMapper.getCategorys();
-        //将categoryList转为categoryVoList
-        List<CategoryVo> categoryVos = allCategorys.stream().map(category -> {
-            CategoryVo categoryVo = new CategoryVo();
-            BeanUtils.copyProperties(category, categoryVo);
-            return categoryVo;
-        }).collect(Collectors.toList());
-        return categoryVos;
-    }
-
-    List<CategoryVo> getChildCategory(List<CategoryVo> allCategorys,CategoryVo category){
+    List<CategoryVo> getChildCategory(Integer Id,List <CategoryVo> all){
         //获得二级菜单
-        List<CategoryVo> secondList = allCategorys.stream().filter(childCategory -> childCategory.getParentId().equals(category.getId())
+        List<CategoryVo> secondList = all.stream().filter(childCategory -> childCategory.getParentId().equals(Id)
         ).sorted(Comparator.comparing(categoryVo -> categoryVo.getSortOrder())
         ).collect(Collectors.toList());
         //对二级菜单递归遍历装填三、四...菜单
         List<CategoryVo> result = secondList.stream().map(categoryVo -> {
-            categoryVo.setChildCategory(getChildCategory(allCategorys, categoryVo));
+            categoryVo.setChildCategory(getChildCategory(categoryVo.getId(),all));
             return categoryVo;
         }).sorted(Comparator.comparing(categoryVo -> categoryVo.getSortOrder())
         ).collect(Collectors.toList());
@@ -95,5 +60,26 @@ public class CategoryServiceImpl implements CategoryService {
         }).sorted(Comparator.comparing(categoryVo -> categoryVo.getSortOrder())
         ).collect(Collectors.toList());
         */
+    }
+
+    @Override
+    public ResponseVo<List<CategoryVo>> getCategorysById(Integer Id) {
+        List<CategoryVo> categoryVoList = getCategoryVos();
+        List<CategoryVo> collect = categoryVoList.stream().filter(categoryVo -> categoryVo.getId().equals(Id) ).map(categoryVo -> {
+            categoryVo.setChildCategory(getChildCategory(Id, categoryVoList));
+            return categoryVo;
+        }).collect(Collectors.toList());
+        return ResponseVo.success(collect);
+    }
+
+    private List<CategoryVo> getCategoryVos(){
+        List<Category> allCategorys = categoryMapper.getCategorys();
+        //将categoryList转为categoryVoList
+        List<CategoryVo> categoryVos = allCategorys.stream().map(category -> {
+            CategoryVo categoryVo = new CategoryVo();
+            BeanUtils.copyProperties(category, categoryVo);
+            return categoryVo;
+        }).collect(Collectors.toList());
+        return categoryVos;
     }
 }
