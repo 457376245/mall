@@ -44,7 +44,4 @@ public class ResponseVo<T> {
     public static  ResponseVo error(ResponseEnum responseEnum,String msg){
         return new ResponseVo(responseEnum.getCode(),msg);
     }
-    public static  ResponseVo error(ResponseEnum responseEnum,BindingResult bindingResult){
-        return new ResponseVo(responseEnum.getCode(),bindingResult.getFieldError().getField()+" "+bindingResult.getFieldError().getDefaultMessage());
-    }
 }

@@ -32,7 +32,7 @@ public class RuntimeExceptionHandler {
     public ResponseVo bingdingException(MethodArgumentNotValidException exception){
         BindingResult bindingResult = exception.getBindingResult();
         log.error("注册提交参数有误:{}{}",exception.getBindingResult().getFieldError());
-        return  ResponseVo.error(ResponseEnum.PARAM_ERROR,bindingResult);
+        return  ResponseVo.error(ResponseEnum.PARAM_ERROR,bindingResult.getFieldError().getField()+" "+bindingResult.getFieldError().getDefaultMessage());
 
     }
 }

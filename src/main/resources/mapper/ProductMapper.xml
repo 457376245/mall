@@ -36,6 +36,10 @@
 </foreach>
 </if>
   </select>
+  <select id="getAllProduct" resultType="com.jh.mall.pojo.Product">
+  select <include refid="Base_Column_List"></include> from mall_product
+  where status=1
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from mall_product
     where id = #{id,jdbcType=INTEGER}

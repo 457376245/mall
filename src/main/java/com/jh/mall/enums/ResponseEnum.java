@@ -11,7 +11,9 @@ public enum ResponseEnum {
     NOT_LOGIN(10,"未登入"),
     PARAM_ERROR(13,"参数有误"),
     USER_ERROR(14,"用户名或密码错误"),
-    PRODUCT_ERROR(21,"该商品已下架或删除");
+    PRODUCT_NOT_EXIST(21,"商品不存在"),
+    PRODUCT_ERROR(22,"该商品已下架或删除"),
+    CART_PRODUCT_NOT_EXIST(31,"购物车商品不存在");
     private Integer code;
     private String msg;
 

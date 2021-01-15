@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserVo {
+    private Integer id;
+
     private String username;
 
     private String email;
