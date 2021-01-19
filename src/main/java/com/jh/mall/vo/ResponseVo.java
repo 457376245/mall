@@ -36,7 +36,7 @@ public class ResponseVo<T> {
         return new ResponseVo(ResponseEnum.SUCCESS.getCode(),ResponseEnum.SUCCESS.getMsg());
     }
     public static <T> ResponseVo success(T data){
-        return new ResponseVo(ResponseEnum.SUCCESS.getCode(),data);
+        return new ResponseVo(ResponseEnum.SUCCESS.getCode(),ResponseEnum.SUCCESS.getMsg(),data);
     }
     public static  ResponseVo error(ResponseEnum responseEnum){
         return new ResponseVo(responseEnum.getCode(),responseEnum.getMsg());

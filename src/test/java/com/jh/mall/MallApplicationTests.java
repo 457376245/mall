@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Transactional
 @Slf4j
 public class MallApplicationTests {
     @Test
